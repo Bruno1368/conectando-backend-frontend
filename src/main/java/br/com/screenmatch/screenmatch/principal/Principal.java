@@ -1,9 +1,12 @@
 package br.com.screenmatch.screenmatch.principal;
 
 import br.com.screenmatch.screenmatch.model.DadosSerie;
+import br.com.screenmatch.screenmatch.model.DadosTemporada;
 import br.com.screenmatch.screenmatch.service.ConsumoApi;
 import br.com.screenmatch.screenmatch.service.ConverteDados;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Principal {
@@ -26,6 +29,16 @@ public class Principal {
         var serie = consumoApi.obterDados(endereco);
         var dadosSerie = converteDados.deserializa(serie, DadosSerie.class);
         System.out.println(dadosSerie);
+
+        List<DadosTemporada> temporadas = new ArrayList<>();
+
+        for (int i = 1; i <= dadosSerie.totalTemporadas(); i++ ){
+            var temporada = consumoApi.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + "&season="+i+API_KEY);
+            var dadosTemporada = converteDados.deserializa(temporada, DadosTemporada.class);
+            temporadas.add(dadosTemporada);
+        }
+
+        temporadas.stream().forEach(System.out::println);
 
     }
 }
