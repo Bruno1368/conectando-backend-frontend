@@ -114,6 +114,15 @@ public class Principal {
             System.out.println("Temporada: " + i + ", nota: " + ep);
         }
 
+        DoubleSummaryStatistics est = episodios.stream()
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
+
+        System.out.println("Média da série: " + est.getAverage());
+        System.out.println("Nota máxima de episódio: " + est.getMax());
+        System.out.println("Nota mínima de episódio: " + est.getMin());
+        System.out.println("Total de episódios levados em conta: " + est.getCount());
+
         //
 //        List<String> nome = Arrays.asList("bruno", "leandra", "jose", "paulo", "rodrigo", "nico");
 //
