@@ -71,20 +71,20 @@ public class Principal {
 
         episodios.forEach(System.out::println);
 
-        System.out.println("Qual nome de um episódio que você gostaria de assistir ? ");
-        var trechoEpisodio = scan.nextLine();
-        Optional<Episodio> episodioEncontrado = episodios.stream()
-                .filter(e -> e.getTitulo().toLowerCase().contains(trechoEpisodio.toLowerCase())) //contains apenas uma parte do titutlo digitado
-                .findFirst();
-
-        if(episodioEncontrado.isPresent()){
-            Episodio episodio = episodioEncontrado.get();
-            System.out.println("Episódio encontrado");
-            System.out.println("Temporada: " + episodio.getTemporada());
-            System.out.println(episodio);
-        }else {
-            System.out.println("Não foi encontrado nenhum episódio");
-        }
+//        System.out.println("Qual nome de um episódio que você gostaria de assistir ? ");
+//        var trechoEpisodio = scan.nextLine();
+//        Optional<Episodio> episodioEncontrado = episodios.stream()
+//                .filter(e -> e.getTitulo().toLowerCase().contains(trechoEpisodio.toLowerCase())) //contains apenas uma parte do titutlo digitado
+//                .findFirst();
+//
+//        if(episodioEncontrado.isPresent()){
+//            Episodio episodio = episodioEncontrado.get();
+//            System.out.println("Episódio encontrado");
+//            System.out.println("Temporada: " + episodio.getTemporada());
+//            System.out.println(episodio);
+//        }else {
+//            System.out.println("Não foi encontrado nenhum episódio");
+//        }
 
 //        System.out.println("A partir de que ano você deseja ver os episódios ? ");
 //        var anoEpisodio = scan.nextInt();
@@ -104,7 +104,15 @@ public class Principal {
 //        ));
 
 
+        Map<Integer, Double> notaPorTemporada = episodios.stream()
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.groupingBy(Episodio::getTemporada,
+                        Collectors.averagingDouble(Episodio::getAvaliacao)));
 
+        for (int i = 1; i <= notaPorTemporada.size(); i++){
+            var ep = notaPorTemporada.get(i);
+            System.out.println("Temporada: " + i + ", nota: " + ep);
+        }
 
         //
 //        List<String> nome = Arrays.asList("bruno", "leandra", "jose", "paulo", "rodrigo", "nico");
