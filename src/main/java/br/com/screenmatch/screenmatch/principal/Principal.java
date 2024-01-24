@@ -38,6 +38,7 @@ public class Principal {
                     5 - Buscar série por ator
                     6 - Top 5 séries
                     7 - Busca por gênero
+                    8 - Buscar por temporada
                     0 - Sair                                 
                     """;
 
@@ -67,6 +68,9 @@ public class Principal {
                 case 7:
                     buscaPorGenero();
                     break;
+                case 8:
+                    buscarPorTemporadaMaxima();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -74,6 +78,19 @@ public class Principal {
                     System.out.println("Opção inválida");
 
             }
+        }
+    }
+
+    private void buscarPorTemporadaMaxima() {
+        System.out.println("Uma série até quantas temporadas você quer assistir ? ");
+        var temporadas = leitura.nextInt();
+        System.out.println("Qual a nota do seriado que você procura ? ");
+        var nota = leitura.nextDouble();
+        List<Serie> series = repository.findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(temporadas, nota);
+        if(series.isEmpty()){
+            System.out.println("Não foi encontrada nenhuma série com esses requisitos");
+        }else {
+            series.forEach(s -> System.out.println(s.getTitulo() + ", nota: " + s.getAvaliacao()));
         }
     }
 
