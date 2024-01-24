@@ -38,7 +38,8 @@ public class Principal {
                     5 - Buscar série por ator
                     6 - Top 5 séries
                     7 - Busca por gênero
-                    8 - Buscar por temporada
+                    8 - Buscar por temporada e avaliação
+                    9 - Buscar episódio por trecho
                     0 - Sair                                 
                     """;
 
@@ -71,6 +72,9 @@ public class Principal {
                 case 8:
                     buscarPorTemporadaMaxima();
                     break;
+                case 9:
+                    buscarEpisodioPorTrecho();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -81,12 +85,26 @@ public class Principal {
         }
     }
 
+    private void buscarEpisodioPorTrecho() {
+        System.out.println("Digite um trecho do nome do episódio que você está buscando: ");
+        var trecho = leitura.nextLine().toLowerCase();
+        List<Episodio> episodiosEncontrados = repository.episodioPorTrechoDoTitulo(trecho);
+            if (episodiosEncontrados.isEmpty()){
+                System.out.println("Não foi encontrado nenhum episódio com o trecho digitado");
+            }
+            episodiosEncontrados.forEach(e -> System.out.println("Série: " +
+                    e.getSerie().getTitulo() +
+                    ", episódio: " + e.getTitulo() +
+                    ", temporada: " + e.getTemporada() +
+                    ", número episódio: " + e.getNumeroEpisodio()));
+    }
+
     private void buscarPorTemporadaMaxima() {
         System.out.println("Uma série até quantas temporadas você quer assistir ? ");
         var temporadas = leitura.nextInt();
         System.out.println("Qual a nota do seriado que você procura ? ");
-        var nota = leitura.nextDouble();
-        List<Serie> series = repository.findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(temporadas, nota);
+        var avaliacao = leitura.nextDouble();
+        List<Serie> series = repository.seriesPorTemporadaEAvaliacao(temporadas, avaliacao);
         if(series.isEmpty()){
             System.out.println("Não foi encontrada nenhuma série com esses requisitos");
         }else {
