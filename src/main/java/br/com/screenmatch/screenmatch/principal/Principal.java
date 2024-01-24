@@ -92,7 +92,7 @@ public class Principal {
                 .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie))
                 .findFirst();
 
-        if (serie.isPresent()) {
+        if(serie.isPresent()){
             var serieEncontrada = serie.get();
             List<DadosTemporada> temporadas = new ArrayList<>();
             for (int i = 1; i <= serieEncontrada.getTotalTemporadas(); i++) {
@@ -104,15 +104,11 @@ public class Principal {
 
             List<Episodio> episodios = temporadas.stream()
                     .flatMap(d -> d.episodios().stream()
-                            .map(e -> {
-                                Episodio episodio = new Episodio(d.numeroTemporada(), e);
-                                episodio.setSerie(serieEncontrada); // Associa o episódio à série
-                                return episodio;
-                            }))
-                    .collect(Collectors.toList());
-
-            episodioRepository.saveAll(episodios); // Salva os episódios usando o EpisodioRepository
-        } else {
+                            .map(e -> new Episodio(d.numeroTemporada(), e))).collect(Collectors.toList());
+            serieEncontrada.setEpisodios(episodios); //relacionando os episódios a instância da série
+            episodios.stream().forEach(e -> e.setSerie(serieEncontrada)); // e a seríe, nas instâncias de cada episódio
+            repository.save(serieEncontrada);
+        }else {
             System.out.println("Série não encontrada");
         }
     }
