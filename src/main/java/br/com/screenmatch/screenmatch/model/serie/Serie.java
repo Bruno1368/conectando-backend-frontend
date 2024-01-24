@@ -24,8 +24,12 @@ public class Serie {
     private String atores;
     private String poster;
     private String sinopse;
-    @Transient
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL) // cascade para retirar a necessidade de um repositorio de episodio, para cada entidade série salva, também salvar os episodios na tabela de episodios
     private List<Episodio> episodios = new ArrayList<>();
+
+    public Serie(){
+
+    }
 
     public Serie(DadosSerie dadosSerie) {
         this.titulo = dadosSerie.titulo();
@@ -44,6 +48,8 @@ public class Serie {
 
     public void setEpisodios(List<Episodio> episodios) {
         this.episodios = episodios;
+
+
     }
 
     public Long getId() {
