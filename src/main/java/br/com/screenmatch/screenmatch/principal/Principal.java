@@ -106,7 +106,6 @@ public class Principal {
                     .flatMap(d -> d.episodios().stream()
                             .map(e -> new Episodio(d.numeroTemporada(), e))).collect(Collectors.toList());
             serieEncontrada.setEpisodios(episodios); //relacionando os episódios a instância da série
-            episodios.stream().forEach(e -> e.setSerie(serieEncontrada)); // e a seríe, nas instâncias de cada episódio
             repository.save(serieEncontrada);
         }else {
             System.out.println("Série não encontrada");
