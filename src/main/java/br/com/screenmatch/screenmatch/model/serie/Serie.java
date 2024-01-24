@@ -24,7 +24,7 @@ public class Serie {
     private String atores;
     private String poster;
     private String sinopse;
-    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL) // cascade para retirar a necessidade de um repositorio de episodio, para cada entidade série salva, também salvar os episodios na tabela de episodios
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER) // cascade para retirar a necessidade de um repositorio de episodio, para cada entidade série salva, também salvar os episodios na tabela de episodios
     private List<Episodio> episodios = new ArrayList<>();
 
     public Serie(){
@@ -124,6 +124,7 @@ public class Serie {
                 ", genero: " + genero +
                 ", atores: '" + atores + '\'' +
                 ", poster: '" + poster + '\'' +
-                ", sinopse: '" + sinopse;
+                ", sinopse: '" + sinopse +
+                ", episódios: '" + episodios;
     }
 }
