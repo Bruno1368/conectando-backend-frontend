@@ -22,6 +22,7 @@ public class Principal {
     List<DadosSerie> dadosSeries = new ArrayList<>();
     private SerieRepository repository;
     private List<Serie> series = new ArrayList<>();
+    private Serie serieEncontrada;
 
     public Principal(SerieRepository repository) {
         this.repository = repository;
@@ -40,6 +41,7 @@ public class Principal {
                     7 - Busca por gênero
                     8 - Buscar por temporada e avaliação
                     9 - Buscar episódio por trecho
+                    10 - Buscar os 5 melhores episódios
                     0 - Sair                                 
                     """;
 
@@ -75,6 +77,9 @@ public class Principal {
                 case 9:
                     buscarEpisodioPorTrecho();
                     break;
+                case 10:
+                    cincoMelhoresEpisodios();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -83,6 +88,19 @@ public class Principal {
 
             }
         }
+    }
+
+    private void cincoMelhoresEpisodios() {
+        buscarSeriePorTitulo();
+        List<Episodio> topCincoEpisodios = repository.topEpisodiosPorSerie(serieEncontrada);
+        if(topCincoEpisodios.isEmpty()){
+            System.out.println("Não foi possível realizar essa operação");
+        }
+        topCincoEpisodios.forEach(e -> System.out.println("Nome do episódio: " +
+                e.getTitulo() +
+                ", temporada: " + e.getTemporada() +
+                ", episódio: " + e.getNumeroEpisodio() +
+                ", avaliação: " + e.getAvaliacao()));
     }
 
     private void buscarEpisodioPorTrecho() {
@@ -96,11 +114,11 @@ public class Principal {
                     e.getSerie().getTitulo() +
                     ", episódio: " + e.getTitulo() +
                     ", temporada: " + e.getTemporada() +
-                    ", número episódio: " + e.getNumeroEpisodio()));
+                    ", número do episódio: " + e.getNumeroEpisodio()));
     }
 
     private void buscarPorTemporadaMaxima() {
-        System.out.println("Uma série até quantas temporadas você quer assistir ? ");
+        System.out.println("Uma série que contenha até quantas temporadas você deseja assistir ? ");
         var temporadas = leitura.nextInt();
         System.out.println("Qual a nota do seriado que você procura ? ");
         var avaliacao = leitura.nextDouble();
@@ -152,7 +170,7 @@ public class Principal {
         var nomeSerie = leitura.nextLine().toLowerCase();
         var serie = repository.findByTituloContainingIgnoreCase(nomeSerie); // titulo = titulo da classe serie
         if (serie.isPresent()) {
-            var serieEncontrada = serie.get();
+            serieEncontrada = serie.get();
             System.out.println("Série");
             System.out.println(serieEncontrada);
         } else {
