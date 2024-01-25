@@ -8,6 +8,7 @@ import br.com.screenmatch.screenmatch.repository.SerieRepository;
 import br.com.screenmatch.screenmatch.model.temporada.DadosTemporada;
 import br.com.screenmatch.screenmatch.service.ConsumoApi;
 import br.com.screenmatch.screenmatch.service.ConverteDados;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,6 +43,8 @@ public class Principal {
                     8 - Buscar por temporada e avaliação
                     9 - Buscar episódio por trecho
                     10 - Buscar os 5 melhores episódios
+                    11 - Buscar episódios a partir de uma data
+                    12 - Top 5 episódios a partir de uma data
                     0 - Sair                                 
                     """;
 
@@ -80,6 +83,12 @@ public class Principal {
                 case 10:
                     cincoMelhoresEpisodios();
                     break;
+                case 11:
+                    buscarEpisodiosAPartirDeUmaData();
+                    break;
+                case 12:
+                    topCincoEpisodiosAPartirDeUmaData();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -88,6 +97,38 @@ public class Principal {
 
             }
         }
+    }
+
+    private void topCincoEpisodiosAPartirDeUmaData() {
+        buscarSeriePorTitulo();
+        System.out.println("A partir de qual ano ? ");
+        var ano = leitura.nextInt();
+        leitura.nextLine();
+        List<Episodio> episodios = repository.topCincoEpisodiosAPartirDeUmAno(serieEncontrada, ano);
+        if(episodios.isEmpty()){
+            System.out.println("Não foram encontrados episódios a partir do ano fornecido");
+        }
+        episodios.forEach(e -> System.out.println("Nome do episódio: " +
+                e.getTitulo() +
+                ", temporada: " + e.getTemporada() +
+                ", episódio: " + e.getNumeroEpisodio() +
+                ", avaliação: " + e.getAvaliacao()));
+    }
+
+    private void buscarEpisodiosAPartirDeUmaData() {
+        buscarSeriePorTitulo();
+        System.out.println("Digite o ano limite de lançamento: ");
+        var anoLancamento = leitura.nextInt();
+        leitura.nextLine();
+        List<Episodio> episodios = repository.episodiosDeSerieAposUmAnoLimite(serieEncontrada, anoLancamento);
+        if(episodios.isEmpty()){
+            System.out.println("Não foi encotrado nenhum episódio com a data fornecida");
+        }
+        episodios.forEach(e -> System.out.println("Nome do episódio: " +
+                e.getTitulo() +
+                ", temporada: " + e.getTemporada() +
+                ", episódio: " + e.getNumeroEpisodio() +
+                ", avaliação: " + e.getAvaliacao()));
     }
 
     private void cincoMelhoresEpisodios() {
