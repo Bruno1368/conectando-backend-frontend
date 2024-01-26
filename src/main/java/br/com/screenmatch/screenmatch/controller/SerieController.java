@@ -1,6 +1,8 @@
 package br.com.screenmatch.screenmatch.controller;
 
 import br.com.screenmatch.screenmatch.dto.SerieDTO;
+import br.com.screenmatch.screenmatch.model.episodio.Episodio;
+import br.com.screenmatch.screenmatch.model.episodio.EpisodioDTO;
 import br.com.screenmatch.screenmatch.model.serie.Serie;
 import br.com.screenmatch.screenmatch.service.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +41,20 @@ public class SerieController {
     public ResponseEntity<SerieDTO> pegaSeriePeloId(@PathVariable Long id) {
         var serie = serieService.pegaSeriePeloId(id);
         return ResponseEntity.ok(serie);
+    }
+
+    @GetMapping("/{id}/temporadas/todas")
+    public ResponseEntity<List<EpisodioDTO>> todosEpisodiosPorSerie(@PathVariable Long id){
+        return ResponseEntity.ok(serieService.todosOsEpisodiosPorSerie(id));
+    }
+
+    @GetMapping("/{id}/temporadas/{numeroTemporada}")
+    public ResponseEntity<List<EpisodioDTO>> episodiosPorTemporada(@PathVariable Long id, @PathVariable Integer numeroTemporada){
+        return ResponseEntity.ok(serieService.obterEpisodiosPorTemporada(id, numeroTemporada));
+    }
+
+    @GetMapping("/categoria/{categoria}")
+    public ResponseEntity<List<SerieDTO>> seriesPorCategoria(@PathVariable String categoria){
+        return ResponseEntity.ok(serieService.obterSeriesPorCategoria(categoria));
     }
 }
